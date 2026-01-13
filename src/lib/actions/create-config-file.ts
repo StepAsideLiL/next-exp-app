@@ -2,8 +2,12 @@
 
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import type { z } from "zod";
+import type { formSchema } from "../utils";
 
-export default async function createConfigFile() {
+export default async function createConfigFile(
+  value: z.infer<typeof formSchema>,
+) {
   try {
     let libDir: string;
     const isSrc = await directoryExists(path.resolve("src"));
@@ -13,11 +17,13 @@ export default async function createConfigFile() {
       libDir = path.resolve("lib");
     }
 
-    const configFilePath = path.resolve(libDir, "site-config", "index.ts");
+    const configFilePath = path.resolve(libDir, "site-config", "data.json");
 
     if (!(await fileExists(configFilePath))) {
       await fs.mkdir(path.dirname(configFilePath), { recursive: true });
-      await fs.writeFile(configFilePath, "Hello", "utf-8");
+      await fs.writeFile(configFilePath, JSON.stringify(value), "utf-8");
+    } else {
+      await fs.writeFile(configFilePath, JSON.stringify(value), "utf-8");
     }
 
     return {

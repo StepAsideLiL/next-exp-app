@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import CreateConfig from "./create-config";
+import CreateConfigForm from "./create-config-form";
 
 export default function DevMode() {
   return (
@@ -25,7 +25,7 @@ export default function DevMode() {
             <DialogTitle>Dev Mode</DialogTitle>
           </DialogHeader>
 
-          <CreateConfig />
+          <CreateConfigForm />
         </DialogContent>
       </Dialog>
     </div>
