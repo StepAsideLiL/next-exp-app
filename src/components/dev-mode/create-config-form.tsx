@@ -5,7 +5,7 @@ import { toast } from "sonner";
 // import type * as React from "react";
 // import { toast } from "sonner";
 import createConfigFile from "@/lib/actions/create-config-file";
-import { formSchema } from "@/lib/utils";
+import { formSchema, type TFormSchema } from "@/lib/utils";
 import { Button } from "../ui/button";
 import {
   Field,
@@ -25,14 +25,18 @@ import { Input } from "../ui/input";
 //   authorUrl: z.string(),
 // });
 
-export default function CreateConfigForm() {
+export default function CreateConfigForm({
+  config,
+}: {
+  config: TFormSchema | null;
+}) {
   const form = useForm({
     defaultValues: {
-      title: "",
-      description: "",
-      url: "",
-      authorName: "",
-      authorUrl: "",
+      title: config?.title || "",
+      description: config?.description || "",
+      url: config?.url || "",
+      authorName: config?.authorName || "",
+      authorUrl: config?.authorUrl || "",
     },
     validators: {
       onSubmit: formSchema,

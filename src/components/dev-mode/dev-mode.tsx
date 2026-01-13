@@ -8,9 +8,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { getSiteConfig } from "@/lib/data/data";
 import CreateConfigForm from "./create-config-form";
 
-export default function DevMode() {
+export default async function DevMode() {
+  const config = await getSiteConfig();
+
   return (
     <div className="fixed top-10 right-10">
       <Dialog>
@@ -25,7 +28,7 @@ export default function DevMode() {
             <DialogTitle>Dev Mode</DialogTitle>
           </DialogHeader>
 
-          <CreateConfigForm />
+          <CreateConfigForm config={config} />
         </DialogContent>
       </Dialog>
     </div>

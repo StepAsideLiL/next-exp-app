@@ -2,12 +2,10 @@
 
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import type { z } from "zod";
-import type { formSchema } from "../utils";
+import { directoryExists, fileExists } from "../data/data";
+import type { TFormSchema } from "../utils";
 
-export default async function createConfigFile(
-  value: z.infer<typeof formSchema>,
-) {
+export default async function createConfigFile(value: TFormSchema) {
   try {
     let libDir: string;
     const isSrc = await directoryExists(path.resolve("src"));
@@ -35,24 +33,6 @@ export default async function createConfigFile(
       success: false,
       message: "Failed",
     };
-  }
-}
-
-async function fileExists(path: string) {
-  try {
-    const stat = await fs.stat(path);
-    return stat.isFile();
-  } catch {
-    return false;
-  }
-}
-
-async function directoryExists(path: string) {
-  try {
-    const stat = await fs.stat(path);
-    return stat.isDirectory();
-  } catch {
-    return false;
   }
 }
 

@@ -13,3 +13,4 @@ export const formSchema = z.object({
   authorName: z.string(),
   authorUrl: z.string(),
 });
+export type TFormSchema = z.infer<typeof formSchema>;
