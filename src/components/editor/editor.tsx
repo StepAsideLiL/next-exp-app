@@ -8,6 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import {
   Bold,
   Code,
+  GripVertical,
   Italic,
   List,
   ListOrdered,
@@ -18,6 +19,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import "./editor.css";
+import DragHandle from "@tiptap/extension-drag-handle-react";
 
 type TEditorContent = JSONContent | string;
 type EditorContextProps = {
@@ -125,16 +127,24 @@ function EditorEditor({
   }, [onContentUpdate, currentContent, initialContent]);
 
   return (
-    <EditorContent
-      editor={editor}
-      className={cn(
-        editorContentStyleVariant({
-          variant,
-          className,
-        }),
-      )}
-      {...props}
-    />
+    <>
+      <DragHandle
+        editor={editor}
+        // nested={{ edgeDetection: { threshold: -16 } }}
+      >
+        <GripVertical className="cursor-pointer" />
+      </DragHandle>
+      <EditorContent
+        editor={editor}
+        className={cn(
+          editorContentStyleVariant({
+            variant,
+            className,
+          }),
+        )}
+        {...props}
+      />
+    </>
   );
 }
 
