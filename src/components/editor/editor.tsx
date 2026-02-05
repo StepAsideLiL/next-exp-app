@@ -86,7 +86,7 @@ const editorContentStyleVariant = cva(
     variants: {
       variant: {
         default:
-          "[&_blockquote]:my-2.5 [&_blockquote]:border-muted-foreground [&_blockquote]:border-l-4 [&_blockquote]:px-5 [&_blockquote]:py-2.5 [&_code]:bg-muted [&_code]:px-1 [&_code]:font-mono [&_em]:italic [&_h1]:font-bold [&_h1]:text-6xl [&_h2]:font-semibold [&_h2]:text-4xl [&_h3]:font-semibold [&_h3]:text-3xl [&_h4]:font-semibold [&_h4]:text-2xl [&_h5]:font-semibold [&_h5]:text-xl [&_h6]:font-semibold [&_h6]:text-lg [&_hr]:border-muted-foreground [&_ol]:list-decimal [&_s]:line-through [&_strong]:font-bold [&_u]:underline [&_ul]:list-disc",
+          "[&_blockquote]:my-2.5 [&_blockquote]:border-muted-foreground [&_blockquote]:border-l-4 [&_blockquote]:px-5 [&_blockquote]:py-2.5 [&_code]:bg-muted [&_code]:px-1 [&_code]:font-mono [&_em]:italic [&_h1]:font-bold [&_h1]:text-6xl [&_h2]:font-semibold [&_h2]:text-4xl [&_h3]:font-semibold [&_h3]:text-3xl [&_h4]:font-semibold [&_h4]:text-2xl [&_h5]:font-semibold [&_h5]:text-xl [&_h6]:font-semibold [&_h6]:text-lg [&_hr]:border-muted-foreground [&_li>p]:inline [&_ol]:list-inside [&_ol]:list-decimal [&_s]:line-through [&_strong]:font-bold [&_u]:underline [&_ul]:list-inside [&_ul]:list-disc",
       },
     },
     defaultVariants: {
