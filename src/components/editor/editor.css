@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .tiptap p.is-editor-empty:first-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);
@@ -12,4 +14,48 @@
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+/*  "[&_blockquote]:my-2.5 [&_blockquote]:border-muted-foreground [&_blockquote]:border-l-4 [&_blockquote]:px-5 [&_blockquote]:py-2.5 [&_code]:bg-muted [&_code]:px-1 [&_code]:font-mono [&_em]:italic [&_hr]:border-muted-foreground [&_li>p]:inline [&_ol]:list-inside [&_ol]:list-decimal [&_s]:line-through [&_strong]:font-bold [&_u]:underline [&_ul]:list-inside [&_ul]:list-disc" */
+
+.ProseMirror {
+  &:focus-visible {
+    @apply border-none shadow-none outline-none;
+  }
+
+  h1 {
+    @apply text-6xl font-bold;
+  }
+
+  h2 {
+    @apply text-4xl font-semibold;
+  }
+
+  h3 {
+    @apply text-3xl font-semibold;
+  }
+
+  h4 {
+    @apply text-2xl font-semibold;
+  }
+
+  h5 {
+    @apply text-xl font-semibold;
+  }
+
+  h6 {
+    @apply text-lg font-semibold;
+  }
+
+  strong {
+    @apply font-bold;
+  }
+
+  em {
+    @apply italic;
+  }
+
+  u {
+    @apply underline bg-red-400;
+  }
 }

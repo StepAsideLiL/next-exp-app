@@ -15,7 +15,7 @@ import {
   Strikethrough,
   Underline,
 } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import "./editor.css";
@@ -95,36 +95,37 @@ const editorContentStyleVariant = cva(
   },
 );
 
-type EditorEditorProps = React.ComponentPropsWithRef<"div"> &
+type EditorBoxProps = React.ComponentPropsWithRef<"div"> &
   VariantProps<typeof editorContentStyleVariant> & {
     content?: TEditorContent;
-    onContentUpdate?: (content: TEditorContent) => void;
+    onContentUpdate?: (eidtor: EditorType) => void;
   };
-function EditorEditor({
+function EditorBox({
   content,
   onContentUpdate,
   className,
   variant,
   ...props
-}: EditorEditorProps) {
-  const { editor, currentContent, initialContent, setInitialContent } =
-    useEditorContext();
+}: EditorBoxProps) {
+  const { editor, setInitialContent } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.Editor should be in Editor.Root");
+    throw new Error("Editor.Box should be in Editor.Root");
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (content) {
       setInitialContent(content);
     }
   }, [content, setInitialContent]);
 
-  React.useEffect(() => {
-    if (onContentUpdate) {
-      onContentUpdate(currentContent ? currentContent : initialContent);
-    }
-  }, [onContentUpdate, currentContent, initialContent]);
+  useEffect(() => {
+    editor.on("update", ({ editor }) => {
+      if (onContentUpdate) {
+        onContentUpdate(editor);
+      }
+    });
+  }, [onContentUpdate, editor]);
 
   return (
     <>
@@ -136,12 +137,13 @@ function EditorEditor({
       </DragHandle>
       <EditorContent
         editor={editor}
-        className={cn(
-          editorContentStyleVariant({
-            variant,
-            className,
-          }),
-        )}
+        // className={cn(
+        //   editorContentStyleVariant({
+        //     variant,
+        //     className,
+        //   }),
+        // )}
+        className={cn(className)}
         {...props}
       />
     </>
@@ -352,26 +354,15 @@ function EditorToggleOrderedListBtn(props: EditorToggleOrderedListBtnProps) {
   );
 }
 
-const Root = EditorRoot;
-const Editor = EditorEditor;
-const ReadOnly = EditorReadOnly;
-const ToggleBoldBtn = EditorToggleBoldBtn;
-const ToggleItalicBtn = EditorToggleItalicBtn;
-const ToggleUnderlineBtn = EditorToggleUnderlineBtn;
-const ToggleStrikeBtn = EditorToggleStrikeBtn;
-const ToggleCodeBtn = EditorToggleCodeBtn;
-const ToggleBulletListBtn = EditorToggleBulletListBtn;
-const ToggleOrderedListBtn = EditorToggleOrderedListBtn;
-
 export {
-  Root,
-  Editor,
-  ReadOnly,
-  ToggleBoldBtn,
-  ToggleItalicBtn,
-  ToggleUnderlineBtn,
-  ToggleStrikeBtn,
-  ToggleCodeBtn,
-  ToggleBulletListBtn,
-  ToggleOrderedListBtn,
+  EditorRoot as Root,
+  EditorBox as Box,
+  type EditorReadOnly as ReadOnly,
+  type EditorToggleBoldBtn as ToggleBoldBtn,
+  type EditorToggleItalicBtn as ToggleItalicBtn,
+  type EditorToggleUnderlineBtn as ToggleUnderlineBtn,
+  type EditorToggleStrikeBtn as ToggleStrikeBtn,
+  type EditorToggleCodeBtn as ToggleCodeBtn,
+  type EditorToggleBulletListBtn as ToggleBulletListBtn,
+  type EditorToggleOrderedListBtn as ToggleOrderedListBtn,
 };
