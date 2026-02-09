@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../../styles/tailwind.css";
 
 .tiptap p.is-editor-empty:first-child::before {
   color: #adb5bd;
@@ -16,11 +17,15 @@
   pointer-events: none;
 }
 
-/*  "[&_blockquote]:my-2.5 [&_blockquote]:border-muted-foreground [&_blockquote]:border-l-4 [&_blockquote]:px-5 [&_blockquote]:py-2.5 [&_code]:bg-muted [&_code]:px-1 [&_code]:font-mono [&_em]:italic [&_hr]:border-muted-foreground [&_li>p]:inline [&_ol]:list-inside [&_ol]:list-decimal [&_s]:line-through [&_strong]:font-bold [&_u]:underline [&_ul]:list-inside [&_ul]:list-disc" */
-
 .ProseMirror {
+  @apply space-y-2;
+
   &:focus-visible {
     @apply border-none shadow-none outline-none;
+  }
+
+  blockquote {
+    @apply my-2.5 border-muted-foreground border-l-4 px-5 py-2.5;
   }
 
   h1 {
@@ -56,6 +61,35 @@
   }
 
   u {
-    @apply underline bg-red-400;
+    @apply underline;
+  }
+
+  s {
+    @apply line-through;
+  }
+
+  code {
+    @apply font-mono px-1 bg-muted rounded-[2px];
+  }
+
+  hr {
+    @apply border-muted-foreground;
+  }
+
+  ol,
+  ul {
+    @apply pl-5 list-inside;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  li > p {
+    @apply inline-block;
   }
 }
