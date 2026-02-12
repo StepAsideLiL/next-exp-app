@@ -1,6 +1,7 @@
 "use client";
 
 import type { Editor as EditorType, JSONContent } from "@tiptap/core";
+import { TextStyleKit } from "@tiptap/extension-text-style";
 import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -40,10 +41,17 @@ export function useEditorContext() {
 
 function getExtensions() {
   return [
-    StarterKit,
+    StarterKit.configure({
+      heading: {
+        HTMLAttributes: {
+          className: "hello",
+        },
+      },
+    }),
     Placeholder.configure({
       placeholder: "Write something...",
     }),
+    TextStyleKit,
   ];
 }
 
