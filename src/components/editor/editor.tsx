@@ -15,7 +15,7 @@ import {
   Strikethrough,
   Underline,
 } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import "./editor.css";
@@ -24,15 +24,11 @@ import DragHandle from "@tiptap/extension-drag-handle-react";
 type TEditorContent = JSONContent | string;
 type EditorContextProps = {
   editor: EditorType | null;
-  initialContent: TEditorContent;
-  setInitialContent: React.Dispatch<React.SetStateAction<string | JSONContent>>;
-  currentContent: TEditorContent;
+  content: TEditorContent;
 };
 const EditorContext = React.createContext<EditorContextProps>({
   editor: null,
-  initialContent: "",
-  setInitialContent: (content: TEditorContent) => content,
-  currentContent: "",
+  content: "",
 });
 export function useEditorContext() {
   const ctx = React.use(EditorContext);
@@ -55,22 +51,24 @@ function getExtensions() {
   ];
 }
 
-function EditorProvider({ children }: { children: React.ReactNode }) {
-  const [initialContent, setInitialContent] =
-    React.useState<TEditorContent>("");
-  const [currentContent, setCurrentContent] =
-    React.useState<TEditorContent>("");
-
+type EditorProviderProps = {
+  children: React.ReactNode;
+  content?: TEditorContent;
+  onUpdate?: (eidtor: EditorType) => void;
+};
+function EditorProvider({ children, content, onUpdate }: EditorProviderProps) {
   const editor = useEditor(
     {
       extensions: getExtensions(),
       immediatelyRender: false,
-      content: initialContent,
+      content: content,
       onUpdate: async ({ editor }) => {
-        setCurrentContent(editor.getJSON());
+        if (onUpdate) {
+          onUpdate(editor);
+        }
       },
     },
-    [initialContent],
+    [content],
   );
 
   if (!editor) {
@@ -79,50 +77,23 @@ function EditorProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     editor,
-    initialContent,
-    setInitialContent,
-    currentContent,
+    content: content ? content : "",
   };
 
   return <EditorContext value={value}>{children}</EditorContext>;
 }
 
-type EditorBoxProps = React.ComponentPropsWithRef<"div"> & {
-  content?: TEditorContent;
-  onContentUpdate?: (eidtor: EditorType) => void;
-};
-function EditorBox({
-  content,
-  onContentUpdate,
-  className,
-  ...props
-}: EditorBoxProps) {
-  const { editor, setInitialContent } = useEditorContext();
+type EditorBoxProps = React.ComponentPropsWithRef<"div">;
+function EditorBox({ className, ...props }: EditorBoxProps) {
+  const { editor } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.Box should be in Editor.Root");
+    throw new Error("Editor.Box should be in Editor.Provider");
   }
-
-  useEffect(() => {
-    if (content) {
-      setInitialContent(content);
-    }
-  }, [content, setInitialContent]);
-
-  useEffect(() => {
-    editor.on("update", ({ editor }) => {
-      if (onContentUpdate) {
-        onContentUpdate(editor);
-      }
-    });
-  }, [onContentUpdate, editor]);
 
   return (
     <>
-      <DragHandle
-        editor={editor}
-        // nested={{ edgeDetection: { threshold: -16 } }}
-      >
+      <DragHandle editor={editor}>
         <GripVertical className="cursor-pointer" />
       </DragHandle>
       <EditorContent editor={editor} className={cn(className)} {...props} />
@@ -135,17 +106,14 @@ function EditorReadOnly({ className, ...props }: EditorReadOnlyProps) {
   const ctx = useEditorContext();
 
   if (!ctx || !ctx.editor) {
-    throw new Error("Editor.ReadOnly should be in Editor.Root");
+    throw new Error("Editor.ReadOnly should be in Editor.Provider");
   }
 
   const editor = useEditor(
     {
       extensions: getExtensions(),
       immediatelyRender: false,
-      content:
-        typeof ctx.currentContent === "string"
-          ? ctx.initialContent
-          : ctx.currentContent,
+      content: ctx.content,
       editable: false,
     },
     [ctx],
@@ -166,7 +134,7 @@ function EditorToggleBoldBtn(props: EditorToggleBoldBtnProps) {
   const { editor } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.ToggleBoldBtn should be in Editor.Root");
+    throw new Error("Editor.ToggleBoldBtn should be in Editor.Provider");
   }
 
   return (
@@ -189,7 +157,7 @@ function EditorToggleItalicBtn(props: EditorToggleItalicBtnProps) {
   const { editor } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.ToggleItalicBtn should be in Editor.Root");
+    throw new Error("Editor.ToggleItalicBtn should be in Editor.Provider");
   }
 
   return (
@@ -212,7 +180,7 @@ function EditorToggleUnderlineBtn(props: EditorToggleUnderlineBtnProps) {
   const { editor } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.ToggleUnderlineBtn should be in Editor.Root");
+    throw new Error("Editor.ToggleUnderlineBtn should be in Editor.Provider");
   }
 
   return (
@@ -235,7 +203,7 @@ function EditorToggleStrikeBtn(props: EditorToggleStrikeBtnProps) {
   const { editor } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.ToggleStrikeBtn should be in Editor.Root");
+    throw new Error("Editor.ToggleStrikeBtn should be in Editor.Provider");
   }
 
   return (
@@ -258,7 +226,7 @@ function EditorToggleCodeBtn(props: EditorToggleCodeBtnProps) {
   const { editor } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.ToggleCodeBtn should be in Editor.Root");
+    throw new Error("Editor.ToggleCodeBtn should be in Editor.Provider");
   }
 
   return (
@@ -281,7 +249,7 @@ function EditorToggleBulletListBtn(props: EditorToggleBulletListBtnProps) {
   const { editor } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.ToggleBulletListBtn should be in Editor.Root");
+    throw new Error("Editor.ToggleBulletListBtn should be in Editor.Provider");
   }
 
   return (
@@ -304,7 +272,7 @@ function EditorToggleOrderedListBtn(props: EditorToggleOrderedListBtnProps) {
   const { editor } = useEditorContext();
 
   if (!editor) {
-    throw new Error("Editor.ToggleOrderedListBtn should be in Editor.Root");
+    throw new Error("Editor.ToggleOrderedListBtn should be in Editor.Provider");
   }
 
   return (
